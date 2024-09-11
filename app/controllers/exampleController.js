@@ -2,6 +2,8 @@ const db = require("../models");
 // const Model = db.Model;
 // const { Op } = require("sequelize");
 
+// ================================ REFOCTORING RESULT IN /app/controllers/appController ================================
+
 exports.refactoreMe1 = (req, res) => {
   // function ini sebenarnya adalah hasil survey dri beberapa pertnayaan, yang mana nilai dri jawaban tsb akan di store pada array seperti yang ada di dataset
   db.sequelize.query(`select * from "surveys"`).then((data) => {
