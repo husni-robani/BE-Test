@@ -4,7 +4,7 @@ const Sequelize = require("sequelize");
 const sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD, {
   host: config.HOST,
   dialect: config.dialect,
-  operatorsAliases: false,
+  // operatorsAliases: false,
 
   pool: {
     max: config.pool.max,
@@ -19,20 +19,20 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-// define model example
-// db.user = require("../models/User")(sequelize, Sequelize);
+db.user = require("../models/User")(sequelize, Sequelize);
+db.survey = require("../models/Survey")(sequelize, Sequelize);
 
 // relation example
-// relation between role and user
-// db.role.hasMany(db.user, {
-//   as: "users",
-//   onDelete: "cascade",
-//   onUpdate: "cascade",
-// });
+db.user.hasMany(db.survey, {
+  as: "surveys",
+  foreignKey: "userId",
+  onDelete: "SET NULL",
+  onUpdate: "CASCADE",
+});
 
-// db.user.belongsTo(db.role, {
-//   foreignKey: "roleId",
-//   as: "role",
-// });
+db.survey.belongsTo(db.user, {
+  foreignKey: "userId",
+  as: "user",
+});
 
 module.exports = db;
