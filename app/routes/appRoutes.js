@@ -13,6 +13,7 @@ module.exports = (app) => {
 
   router.get("/survey", Controller.refactoreMe1);
   router.post("/survey", Controller.refactoreMe2);
+  router.get("/attacks", Controller.getData);
 
   app.use("/api/data", router);
 };
