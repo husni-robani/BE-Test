@@ -54,3 +54,18 @@ INSERT INTO public.surveys ("values","createdAt","updatedAt","userId") VALUES
 	 ('{100,100,90,90,100}','2022-12-22 08:56:50.696+07','2022-12-22 08:56:50.696+07',1),
 	 ('{90,100,100,80,90}','2022-12-22 09:08:50.908+07','2022-12-22 09:08:50.908+07',2),
 	 ('{80,80,80,80,80}','2022-12-22 21:05:32.317+07','2022-12-22 21:05:32.317+07',3);
+
+
+
+-- Addtional Table for save attacks data
+CREATE TABLE IF NOT EXISTS "attacks" (
+      id SERIAL PRIMARY KEY,
+      sourceCountry VARCHAR(255),
+      destinationCountry VARCHAR(255),
+      millisecond INTEGER,
+      type VARCHAR(255),
+      weight VARCHAR(255),
+      attackTime TIMESTAMP,
+      createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
