@@ -71,3 +71,72 @@ exports.refactoreMe2 = async (req, res) => {
     });
   }
 };
+
+// WebSocket-based endpoint to fetch data every 3 minutes
+exports.callmeWebSocket = (ws, req) => {
+  const fetchApiData = async () => {
+    try {
+      const response = await fetch(
+        "https://livethreatmap.radware.com/api/map/attacks?limit=10"
+      );
+      const data = await response.json();
+
+      const allAttacks = data.flat();
+
+      // Send data to the WebSocket client
+      if (ws.readyState === ws.OPEN) {
+        // Check if websocket is still open
+        ws.send(JSON.stringify(data));
+        console.log("Sent data to WebSocket client");
+      }
+
+      // Save Data to database
+      const insertQuery = `
+      INSERT INTO "Attacks" (sourceCountry, destinationCountry, millisecond, type, weight, attackTime)
+      VALUES ($1, $2, $3, $4, $5, $6);
+    `;
+      if (allAttacks) {
+        console.log("Saved Data");
+        for (const attack of allAttacks) {
+          const {
+            sourceCountry,
+            destinationCountry,
+            millisecond,
+            type,
+            weight,
+            attackTime,
+          } = attack;
+
+          await db.sequelize.query(insertQuery, {
+            bind: [
+              sourceCountry || "Unknown",
+              destinationCountry || "Unknown",
+              millisecond,
+              type,
+              weight,
+              new Date(attackTime),
+            ],
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching data from API:", error);
+    }
+  };
+
+  // interval for fetching every 3 menutes (180000)
+  const intervalId = setInterval(fetchApiData, 180000);
+
+  ws.on("message", function (msg) {
+    console.log("received message", msg);
+  });
+
+  ws.on("close", () => {
+    console.log("WebSocket connection closed");
+    clearInterval(intervalId);
+  });
+};
+
+exports.getData = (req, res) => {
+  // do something
+};
