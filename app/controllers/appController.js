@@ -1,7 +1,6 @@
 const db = require("../models/index");
-const Survey = db.survey;
-const User = db.user;
 const Service = require("../services/appServices");
+const jwt = require("jsonwebtoken");
 
 exports.refactoreMe1 = async (req, res) => {
   try {
@@ -150,4 +149,15 @@ exports.getData = async (req, res) => {
       message: "Internal Server Error",
     });
   }
+};
+
+// only for simulation of how JWT works
+exports.generateToken = (req, res) => {
+  // if credentials match
+  const token = jwt.sign("valid", "your-secret-key");
+
+  res.status(201).json({
+    token,
+  });
+  console.log("generate token");
 };
