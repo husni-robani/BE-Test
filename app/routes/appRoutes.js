@@ -1,6 +1,7 @@
 const Controller = require("../controllers/appController");
+const verifyToken = require("../middleware/authMiddleware");
 
-module.exports = (app) => {
+exports.httpRoutes = (app) => {
   app.use((req, res, next) => {
     res.header(
       "Access-Control-Allow-Headers",
@@ -11,9 +12,23 @@ module.exports = (app) => {
 
   const router = require("express").Router();
 
-  router.get("/survey", Controller.refactoreMe1);
+  // use auth middleware
+  router.get("/survey", verifyToken, Controller.refactoreMe1);
+
   router.post("/survey", Controller.refactoreMe2);
   router.get("/attacks", Controller.getData);
 
   app.use("/api/data", router);
+};
+
+exports.wsRoutes = (app) => {
+  app.ws("/app/data", Controller.callmeWebSocket);
+};
+
+exports.authRoutes = (app) => {
+  const router = require("express").Router();
+
+  router.get("/getToken", Controller.generateToken);
+
+  app.use("/api", router);
 };
