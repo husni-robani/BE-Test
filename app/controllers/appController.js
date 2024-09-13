@@ -47,7 +47,6 @@ exports.refactoreMe2 = async (req, res) => {
       });
     }
 
-    // await user.update({ dosurvey: true });
     await db.sequelize.query(
       `UPDATE "users" 
       SET "dosurvey" = ${true} 
@@ -74,7 +73,6 @@ exports.refactoreMe2 = async (req, res) => {
 
 // WebSocket-based endpoint to fetch data every 3 minutes
 exports.callmeWebSocket = (ws, req) => {
-  // const allAttacks = data.flat();
   const fetchAndSend = async () => {
     const data = await Service.fetchAttackApi();
 
@@ -109,14 +107,11 @@ exports.getData = async (req, res) => {
   await Service.saveAttackData(allAttacks);
 
   try {
-    // Raw query to count attacks by destinationCountry
     const destinationQuery = `
       SELECT destinationCountry AS country, COUNT(*) AS total
       FROM "attacks"
       GROUP BY destinationCountry;
     `;
-
-    // Raw query to count attacks by sourceCountry
     const sourceQuery = `
       SELECT sourceCountry AS country, COUNT(*) AS total
       FROM "attacks"
