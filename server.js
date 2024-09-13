@@ -22,11 +22,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // routes
-require("./app/routes/appRoutes")(app);
-
-// websocket route
-const Controller = require("./app/controllers/appController");
-app.ws("/app/data", Controller.callmeWebSocket);
+const routes = require("./app/routes/appRoutes");
+routes.httpRoutes(app);
+routes.wsRoutes(app);
+routes.authRoutes(app);
 
 const PORT = 7878;
 app.listen(PORT, () => {
